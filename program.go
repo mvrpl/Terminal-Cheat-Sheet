@@ -39,13 +39,13 @@ func updateDB() {
 func main() {
 
 	if len(os.Args) <= 1 {
-		fmt.Println("HELP")
+		fmt.Println("Uso: $ chsht python | less -r, para atualizar: $ chsht -update")
 		os.Exit(0)
 	}
 
 	if _, err := os.Stat(os.Getenv("HOME") + "/.cheat_sheets.db"); os.IsNotExist(err) {
-		fmt.Println("Banco de dados instalado com sucesso!")
 		updateDB()
+		fmt.Println("Banco de dados instalado com sucesso!")
 	}
 
 	if os.Args[1] == "-update" {
