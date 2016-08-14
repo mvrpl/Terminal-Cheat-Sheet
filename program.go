@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"flag"
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/olekukonko/tablewriter"
@@ -21,24 +20,46 @@ func containsStr(slice []string, item string) bool {
 	return ok
 }
 
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
+}
+
+func updateDB() {
+	db, err := os.Create(os.Getenv("HOME") + "/.cheat_sheets.db")
+	check(err)
+	defer db.Close()
+	resp, err := http.Get("https://github.com/mvrpl/Terminal-Cheat-Sheet/blob/master/cheat_sheets.db?raw=true")
+	check(err)
+	defer resp.Body.Close()
+	io.Copy(db, resp.Body)
+}
+
 func main() {
 
+	if len(os.Args) <= 1 {
+		fmt.Println("HELP")
+		os.Exit(0)
+	}
+
+	if _, err := os.Stat(os.Getenv("HOME") + "/.cheat_sheets.db"); os.IsNotExist(err) {
+		fmt.Println("Banco de dados instalado com sucesso!")
+		updateDB()
+	}
+
 	if os.Args[1] == "-update" {
-		db, _ := os.Create(os.Getenv("HOME") + "/.cheat_sheets.db")
-		defer db.Close()
-		resp, _ := http.Get("https://github.com/mvrpl/Terminal-Cheat-Sheet/blob/master/cheat_sheets.db?raw=true")
-		defer resp.Body.Close()
-		io.Copy(db, resp.Body)
+		updateDB()
 		fmt.Println("Banco de dados atualizado com sucesso!")
 		os.Exit(0)
 	}
 
-	Program := flag.String("program", "", "Cheat Sheet for the program. (Required)")
-	flag.Parse()
+	Program := os.Args[1]
 
 	db, _ := sql.Open("sqlite3", os.Getenv("HOME")+"/.cheat_sheets.db")
-	rows, err := db.Query("SELECT * FROM " + *Program)
+	rows, _ := db.Query("SELECT * FROM " + Program)
 	dbtables, err := db.Query("select name from sqlite_master where type = 'table'")
+	check(err)
 
 	tables := []string{}
 	for dbtables.Next() {
@@ -47,13 +68,13 @@ func main() {
 		tables = append(tables, name)
 	}
 
-	if containsStr(tables, *Program) != true {
-		fmt.Println("Program not exists in database!")
-		os.Exit(1)
-	}
-
-	if err != nil {
-		panic(err)
+	if containsStr(tables, Program) != true {
+		fmt.Println("Sofware nao existe na base da dados.")
+		fmt.Println("Disponiveis:")
+		for _, soft := range tables {
+			fmt.Println("  - " + soft)
+		}
+		os.Exit(0)
 	}
 
 	var data map[string][]map[string]string
@@ -74,7 +95,7 @@ func main() {
 		fmt.Println("+" + strings.Repeat("-", len(key)+2) + "+")
 		fmt.Println("| \033[1m" + strings.ToUpper(key) + "\033[0m |")
 		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"Command", "Description"})
+		table.SetHeader([]string{"Comando", "Descricao"})
 		table.SetRowLine(true)
 		table.SetRowSeparator("-")
 		for _, v := range value {
