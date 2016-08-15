@@ -8,7 +8,7 @@ Cheat Sheets on terminal for Unix Like. Written in GO with the following package
 ## Use
 ##### Show cheat sheet for sofware
 ```sh
-$ chsht python
+$ chsht tmux | less -r
 ```
 ##### Update database
 ```sh
