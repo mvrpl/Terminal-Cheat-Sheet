@@ -6,7 +6,7 @@ Cheat Sheets on terminal for Unix Like. Written in GO with the following package
   - [ASCII Table Writer](https://github.com/olekukonko/tablewriter)
 
 ## Use
-##### Show cheat sheet for sofware
+##### Show cheat sheet for software
 ```sh
 $ chsht tmux | less -r
 ```
@@ -14,14 +14,14 @@ $ chsht tmux | less -r
 ```sh
 $ chsht -update
 ```
-##### List sofwares (undeveloped)
+##### List softwares (undeveloped)
 ```sh
 $ chsht -ls
 ```
 
 ## Version
 
-0.0.1
+0.0.3
 
 ## Download compiled
 
