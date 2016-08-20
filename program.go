@@ -11,6 +11,10 @@ import (
 	"strings"
 )
 
+const (
+	version = "1.0"
+)
+
 func containsStr(slice []string, item string) bool {
 	set := make(map[string]struct{}, len(slice))
 	for _, s := range slice {
@@ -36,6 +40,16 @@ func updateDB() {
 	io.Copy(db, resp.Body)
 }
 
+func help() {
+	fmt.Println("version: " + version)
+	use := []string{"chsht vim", "Example: Show cheat sheet for vim."}
+	fmt.Println(strings.Join(use, "\n\t"))
+	opt_update := []string{"chsht --update", "Update database, internet connection is required."}
+	fmt.Println(strings.Join(opt_update, "\n\t"))
+	opt_ls := []string{"chsht --list", "List sofwares with cheat sheets in database."}
+	fmt.Println(strings.Join(opt_ls, "\n\t"))
+}
+
 func main() {
 
 	db, err := sql.Open("sqlite3", os.Getenv("HOME")+"/.cheat_sheets.db")
@@ -52,7 +66,7 @@ func main() {
 	}
 
 	if len(os.Args) <= 1 {
-		fmt.Println("Uso: $ chsht python | less -r, para atualizar: $ chsht --update")
+		help()
 		os.Exit(0)
 	}
 
@@ -67,17 +81,12 @@ func main() {
 	}
 
 	if os.Args[1] == "--version" {
-		fmt.Println("chsht 1.0")
+		fmt.Println("version: " + version)
 		os.Exit(0)
 	}
 
 	if os.Args[1] == "--help" {
-
-		opt_update := []string{"--update", "Update database, internet connection is required."}
-		fmt.Println(strings.Join(opt_update, "\n\t"))
-		opt_ls := []string{"--list", "List sofwares with cheat sheets in database."}
-		fmt.Println(strings.Join(opt_ls, "\n\t"))
-
+		help()
 		os.Exit(0)
 	}
 
