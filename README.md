@@ -6,30 +6,38 @@ Cheat Sheets on terminal for Unix Like. Written in GO with the following package
   - [ASCII Table Writer](https://github.com/olekukonko/tablewriter)
 
 ## Use
+##### Help
+```sh
+chsht --help
+```
 ##### Show cheat sheet for software
 ```sh
-$ chsht tmux | less -r
+chsht tmux | less -r
 ```
 ##### Update database
 ```sh
-$ chsht -update
+chsht --update
 ```
-##### List softwares (undeveloped)
+##### List softwares
 ```sh
-$ chsht -ls
+chsht --list
+```
+##### Version
+```sh
+chsht --version
 ```
 
 ## Version
 
-0.0.3
+1.0
 
 ## Download compiled
 
 ##### Choose your version: [Centos65|MacElCapitan|Ubuntu64]
 ```sh
-$ wget https://github.com/mvrpl/Terminal-Cheat-Sheet/blob/master/compiled/[Centos65|MacElCapitan|Ubuntu64]/chsht?raw=true -O chsht
-$ chmod 755 chsht
-$ ./chsht tmux
+wget https://github.com/mvrpl/Terminal-Cheat-Sheet/blob/master/compiled/[Centos65|MacElCapitan|Ubuntu64]/chsht?raw=true -O chsht
+chmod 755 chsht
+./chsht tmux
 ```
 Optional: Add **chsht** to your PATH
 
