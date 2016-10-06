@@ -8,7 +8,7 @@ Cheat Sheets on terminal for Unix Like. Written in GO with the following package
 ## Use
 ##### Help
 ```sh
-chsht --help
+chsht -help
 ```
 ##### Show cheat sheet for software
 ```sh
@@ -16,15 +16,15 @@ chsht tmux | less -r
 ```
 ##### Update database
 ```sh
-chsht --update
+chsht -update
 ```
 ##### List softwares
 ```sh
-chsht --list
+chsht -list
 ```
 ##### Version
 ```sh
-chsht --version
+chsht -version
 ```
 
 ## Version
