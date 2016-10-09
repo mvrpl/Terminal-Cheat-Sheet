@@ -103,6 +103,9 @@ func help() {
 }
 
 func main() {
+	if _, err := os.Stat(os.Getenv("HOME") + "/.cheat_sheets.db"); os.IsNotExist(err) {
+		updateDB()
+	}
 	_, err := os.Create(os.Getenv("HOME") + "/.chshtout.txt")
 	db, err := sql.Open("sqlite3", os.Getenv("HOME")+"/.cheat_sheets.db")
 	check(err)
@@ -120,10 +123,6 @@ func main() {
 	if len(os.Args) <= 1 {
 		help()
 		os.Exit(0)
-	}
-
-	if _, err := os.Stat(os.Getenv("HOME") + "/.cheat_sheets.db"); os.IsNotExist(err) {
-		updateDB()
 	}
 
 	if os.Args[1] == "--update" {
