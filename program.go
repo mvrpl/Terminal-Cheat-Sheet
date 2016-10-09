@@ -4,16 +4,59 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/olekukonko/tablewriter"
+	"golang.org/x/text/runes"
+	"golang.org/x/text/transform"
+	"golang.org/x/text/unicode/norm"
 	"io"
 	"net/http"
 	"os"
+	"os/exec"
 	"strings"
+	"unicode"
 )
 
 const (
-	version = "1.0"
+	version = "2.0"
 )
+
+func NormalizeString(text string) string {
+	t := transform.Chain(norm.NFD, runes.Remove(runes.In(unicode.Mn)), norm.NFC)
+	s, _, _ := transform.String(t, text)
+	return s
+}
+
+func rightPad2Len(str, pad string, lenght int) string {
+	for {
+		str += pad
+		if len(str) > lenght {
+			return str[0:lenght]
+		}
+	}
+}
+
+func rightPad2LenNorm(s string, padStr string, overallLen int) string {
+	s = NormalizeString(s)
+	var padCountInt int
+	padCountInt = 1 + ((overallLen - len(padStr)) / len(padStr))
+	var retStr = s + strings.Repeat(padStr, padCountInt)
+	return retStr[:overallLen]
+}
+
+func OutLess() {
+	var out io.WriteCloser
+	var cmd *exec.Cmd
+	file, err := os.Open(os.Getenv("HOME") + "/.chshtout.txt")
+	cmd = exec.Command("/usr/bin/less")
+	out, _ = cmd.StdinPipe()
+	cmd.Stdout = os.Stdout
+	_, err = io.Copy(out, file)
+	if err != nil {
+		panic(err)
+	}
+	file.Close()
+	out.Close()
+	cmd.Run()
+}
 
 func containsStr(slice []string, item string) bool {
 	set := make(map[string]struct{}, len(slice))
@@ -40,6 +83,15 @@ func updateDB() {
 	io.Copy(db, resp.Body)
 }
 
+func tempFileOut(data string) {
+	file, err := os.OpenFile(os.Getenv("HOME")+"/.chshtout.txt", os.O_APPEND|os.O_WRONLY, 0600)
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+	file.WriteString(data)
+}
+
 func help() {
 	fmt.Println("version: " + version)
 	use := []string{"chsht vim", "Example: Show cheat sheet for vim."}
@@ -51,7 +103,7 @@ func help() {
 }
 
 func main() {
-
+	_, err := os.Create(os.Getenv("HOME") + "/.chshtout.txt")
 	db, err := sql.Open("sqlite3", os.Getenv("HOME")+"/.cheat_sheets.db")
 	check(err)
 	dbtables, err := db.Query("select name from sqlite_master where type = 'table'")
@@ -128,18 +180,30 @@ func main() {
 	}
 
 	for key, value := range data {
-		fmt.Println("+" + strings.Repeat("-", len(key)+2) + "+")
-		fmt.Println("| \033[1m" + strings.ToUpper(key) + "\033[0m |")
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"Command", "Description"})
-		table.SetRowLine(true)
-		table.SetRowSeparator("-")
+		tempFileOut("+" + strings.Repeat("-", len(key)+2) + "+\n")
+		tempFileOut("| " + strings.ToUpper(key) + " |\n")
+		tempFileOut("+" + strings.Repeat("-", len(key)+2) + "+\n")
+		cmdSize := 0
+		descSize := 0
+		var cmdsANDdescs map[string]string
+		cmdsANDdescs = make(map[string]string)
 		for _, v := range value {
 			for cmd, desc := range v {
-				outline := []string{cmd, desc}
-				table.Append(outline)
+				if len(cmd) > cmdSize {
+					cmdSize = len(cmd)
+				}
+				if len(desc) > descSize {
+					descSize = len(desc)
+				}
+				cmdsANDdescs[cmd] = desc
 			}
 		}
-		table.Render()
+		tempFileOut("+" + strings.Repeat("-", cmdSize+2) + "+" + strings.Repeat("-", descSize+2) + "+\n")
+		for k, v := range cmdsANDdescs {
+			tempFileOut(rightPad2Len("| "+k, " ", cmdSize+2) + " | ")
+			tempFileOut(rightPad2LenNorm(v, " ", descSize) + " |\n")
+			tempFileOut("+" + strings.Repeat("-", cmdSize+2) + "+" + strings.Repeat("-", descSize+2) + "+\n")
+		}
 	}
+	OutLess()
 }
