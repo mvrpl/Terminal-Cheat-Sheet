@@ -34,7 +34,7 @@ chsht --version
 
 2.0
 
-## Demo
+## Screenshot
 
 ![](https://s11.postimg.org/h5j75navn/Captura_de_tela_2016_10_09_14_06_28.png)
 
