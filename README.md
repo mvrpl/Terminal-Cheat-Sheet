@@ -4,6 +4,10 @@ Cheat Sheets on terminal for Unix Like. Written in GO with the following package
 
   - [GO Sqlite3](https://github.com/mattn/go-sqlite3)
 
+## Demo
+##### User: marcos | Pass: 0312
+[http://ec2-54-70-189-64.us-west-2.compute.amazonaws.com:4200](http://ec2-54-70-189-64.us-west-2.compute.amazonaws.com:4200)
+
 ## Use
 ##### Help
 ```sh
