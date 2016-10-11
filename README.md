@@ -40,7 +40,7 @@ chsht --version
 
 ## Install from apt-get
 ```sh
-sudo add-apt-repository ppa:mvrpl/chsht && sudo apt-get update
+sudo add-apt-repository ppa:mvrpl/chsht -y && sudo apt-get update
 sudo apt-get install chsht
 ```
 
