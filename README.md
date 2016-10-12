@@ -47,6 +47,12 @@ sudo add-apt-repository ppa:mvrpl/chsht -y && sudo apt-get update
 sudo apt-get install chsht
 ```
 
+## Install from RPM
+```sh
+sudo yum update
+sudo yum install https://github.com/mvrpl/Terminal-Cheat-Sheet/blob/master/chsht-2.0-1.x86_64.rpm?raw=true
+```
+
 ## Download compiled
 
 ##### Choose your version: [Centos65|MacSierra|Ubuntu64]
