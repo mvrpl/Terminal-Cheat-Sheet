@@ -46,7 +46,7 @@ func OutLess() {
 	var out io.WriteCloser
 	var cmd *exec.Cmd
 	file, err := os.Open(os.Getenv("HOME") + "/.chshtout.txt")
-	cmd = exec.Command("/usr/bin/less")
+	cmd = exec.Command("/usr/bin/less", "-S", "-R")
 	out, _ = cmd.StdinPipe()
 	cmd.Stdout = os.Stdout
 	_, err = io.Copy(out, file)
@@ -180,7 +180,7 @@ func main() {
 
 	for key, value := range data {
 		tempFileOut("+" + strings.Repeat("-", len(key)+2) + "+\n")
-		tempFileOut("| " + strings.ToUpper(key) + " |\n")
+		tempFileOut("| \033[1m" + strings.ToUpper(key) + "\033[0m |\n")
 		tempFileOut("+" + strings.Repeat("-", len(key)+2) + "+\n")
 		cmdSize := 0
 		descSize := 0
