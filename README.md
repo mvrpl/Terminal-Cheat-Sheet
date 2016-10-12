@@ -44,7 +44,7 @@ chsht --version
 ## Install from apt-get
 ```sh
 sudo add-apt-repository ppa:mvrpl/chsht -y && sudo apt-get update
-sudo apt-get install less chsht
+sudo apt-get install chsht
 ```
 
 ## Install from RPM
