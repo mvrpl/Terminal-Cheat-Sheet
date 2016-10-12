@@ -4,6 +4,9 @@ Cheat Sheets on terminal for Unix Like. Written in GO with the following package
 
   - [GO Sqlite3](https://github.com/mattn/go-sqlite3)
 
+## Dependencies
+  - [GNU Less](https://www.gnu.org/software/less/)
+
 ## Demo
 ##### User: marcos | Pass: 0312
 [http://ec2-54-70-189-64.us-west-2.compute.amazonaws.com:4200](http://ec2-54-70-189-64.us-west-2.compute.amazonaws.com:4200)
@@ -40,8 +43,14 @@ chsht --version
 
 ## Install from apt-get
 ```sh
-sudo add-apt-repository ppa:mvrpl/chsht && sudo apt-get update
-sudo apt-get install chsht
+sudo add-apt-repository ppa:mvrpl/chsht -y && sudo apt-get update
+sudo apt-get install less chsht
+```
+
+## Install from RPM
+```sh
+sudo yum update
+sudo yum install https://dl.dropboxusercontent.com/u/2243082/chsht-2.0-1.x86_64.rpm
 ```
 
 ## Download compiled
