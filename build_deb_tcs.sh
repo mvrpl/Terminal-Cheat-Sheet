@@ -6,7 +6,7 @@ export DEBFULLNAME="Marcos Lima"
 
 SOURCEBINPATH=~/Documentos/Terminal-Cheat-Sheet/compiled/Ubuntu64 # Set path of bin
 SOURCEBIN=chsht # Bin name
-DEBFOLDER=~/chsht-data # Package directory in user HOME
+DEBFOLDER=~/chsht # Package directory in user HOME
 DEBVERSION=2.0 # Set version of package
 DEBFOLDERNAME=$DEBFOLDER-$DEBVERSION # Complete packge folder name in user HOME
 
@@ -24,6 +24,8 @@ dh_make --native
 grep -v makefile debian/rules > debian/rules.new 
 mv debian/rules.new debian/rules 
 
+sed -i -e "s/chsht-data/chsht/g" -e "s/\(Section:\s\).*/\1misc/g" -e "s/\(Homepage:\s\).*/\1http:\/\/www.mvrpl.com.br\//g" -e "s/\(Depends:\s.*\)/\1, less/g" debian/control
+
 # debian/install must contain the list of scripts to install 
 # as well as the target directory
 echo $SOURCEBIN usr/bin > debian/install 
@@ -40,7 +42,7 @@ debuild -S -k$(gpg --list-secret-keys --keyid-format LONG | awk '{if(index($0, "
 cd $HOME
 
 # Upload change to launchpad.net
-dput ppa:mvrpl/chsht chsht-data_2.0_source.changes
+dput ppa:mvrpl/chsht chsht_2.0_source.changes
 
 # Running in Bash Shell
 # chmod 755 build_tcs.sh
