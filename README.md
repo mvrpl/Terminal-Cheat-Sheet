@@ -7,10 +7,6 @@ Cheat Sheets on terminal for Unix Like. Written in GO with the following package
 ## Dependencies
   - [GNU Less](https://www.gnu.org/software/less/)
 
-## Demo
-##### User: marcos | Pass: 0312
-[http://ec2-54-70-189-64.us-west-2.compute.amazonaws.com:4200](http://ec2-54-70-189-64.us-west-2.compute.amazonaws.com:4200)
-
 ## Use
 ##### Help
 ```sh
@@ -44,7 +40,7 @@ chsht --version
 ## Install from apt-get
 ```sh
 sudo add-apt-repository ppa:mvrpl/chsht -y && sudo apt-get update
-sudo apt-get install less chsht
+sudo apt-get install chsht
 ```
 
 ## Install from RPM
