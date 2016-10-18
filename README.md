@@ -57,9 +57,9 @@ sudo yum install https://dl.dropboxusercontent.com/u/2243082/chsht-2.0-1-Centos6
 
 ## Download compiled
 
-##### Choose your version: [Centos65|MacSierra|Ubuntu64]
+##### Choose your version: [Centos6|Centos7|MacSierra|Ubuntu64]
 ```sh
-wget https://github.com/mvrpl/Terminal-Cheat-Sheet/blob/master/compiled/[Centos65|MacSierra|Ubuntu64]/chsht?raw=true -O chsht
+wget "https://github.com/mvrpl/Terminal-Cheat-Sheet/blob/master/compiled/[Centos6|Centos7|MacSierra|Ubuntu64]/chsht?raw=true" -O chsht
 chmod 755 chsht
 ./chsht tmux
 ```
