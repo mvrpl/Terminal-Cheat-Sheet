@@ -43,17 +43,23 @@ sudo add-apt-repository ppa:mvrpl/chsht -y && sudo apt-get update
 sudo apt-get install chsht
 ```
 
-## Install from RPM
+## Install from RPM 
+####For CentOS 7.x
 ```sh
 sudo yum update
 sudo yum install https://dl.dropboxusercontent.com/u/2243082/chsht-2.0-1.x86_64.rpm
 ```
+####For CentOS 6.x
+```sh
+sudo yum update
+sudo yum install https://dl.dropboxusercontent.com/u/2243082/chsht-2.0-1-Centos6.x86_64.rpm
+```
 
 ## Download compiled
 
-##### Choose your version: [Centos65|MacSierra|Ubuntu64]
+##### Choose your version: [Centos6|Centos7|MacSierra|Ubuntu64]
 ```sh
-wget https://github.com/mvrpl/Terminal-Cheat-Sheet/blob/master/compiled/[Centos65|MacSierra|Ubuntu64]/chsht?raw=true -O chsht
+wget "https://github.com/mvrpl/Terminal-Cheat-Sheet/blob/master/compiled/[Centos6|Centos7|MacSierra|Ubuntu64]/chsht?raw=true" -O chsht
 chmod 755 chsht
 ./chsht tmux
 ```
