@@ -13,6 +13,7 @@ import (
 	"os/exec"
 	"strings"
 	"unicode"
+	"unicode/utf8"
 )
 
 const (
@@ -189,7 +190,7 @@ func main() {
 		for _, v := range value {
 			for cmd, desc := range v {
 				if len(cmd) > cmdSize {
-					cmdSize = len(cmd)
+					cmdSize = utf8.RuneCountInString(cmd)
 				}
 				if len(desc) > descSize {
 					descSize = len(desc)
