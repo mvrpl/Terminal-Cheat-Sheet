@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"database/sql"
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
@@ -17,7 +18,7 @@ import (
 )
 
 const (
-	version = "2.0"
+	version = "0.1.3"
 )
 
 func NormalizeString(text string) string {
@@ -43,19 +44,14 @@ func rightPad2LenNorm(s string, padStr string, overallLen int) string {
 	return retStr[:overallLen]
 }
 
-func OutLess() {
-	var out io.WriteCloser
+func OutLess(output string) {
+	var in io.WriteCloser
 	var cmd *exec.Cmd
-	file, err := os.Open(os.Getenv("HOME") + "/.chshtout.txt")
 	cmd = exec.Command("/usr/bin/less", "-S", "-R")
-	out, _ = cmd.StdinPipe()
+	in, _ = cmd.StdinPipe()
 	cmd.Stdout = os.Stdout
-	_, err = io.Copy(out, file)
-	if err != nil {
-		panic(err)
-	}
-	file.Close()
-	out.Close()
+	io.Copy(in, bytes.NewBufferString(output))
+	in.Close()
 	cmd.Run()
 }
 
@@ -82,15 +78,6 @@ func updateDB() {
 	check(err)
 	defer resp.Body.Close()
 	io.Copy(db, resp.Body)
-}
-
-func tempFileOut(data string) {
-	file, err := os.OpenFile(os.Getenv("HOME")+"/.chshtout.txt", os.O_APPEND|os.O_WRONLY, 0600)
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
-	file.WriteString(data)
 }
 
 func help() {
@@ -179,10 +166,11 @@ func main() {
 		data[session] = append(data[session], commands)
 	}
 
+	var strData string
 	for key, value := range data {
-		tempFileOut("+" + strings.Repeat("-", len(key)+2) + "+\n")
-		tempFileOut("| \033[1m" + strings.ToUpper(key) + "\033[0m |\n")
-		tempFileOut("+" + strings.Repeat("-", len(key)+2) + "+\n")
+		strData += "+" + strings.Repeat("-", len(key)+2) + "+\n"
+		strData += "| \033[1m" + strings.ToUpper(key) + "\033[0m |\n"
+		strData += "+" + strings.Repeat("-", len(key)+2) + "+\n"
 		cmdSize := 0
 		descSize := 0
 		var cmdsANDdescs map[string]string
@@ -193,17 +181,17 @@ func main() {
 					cmdSize = utf8.RuneCountInString(cmd)
 				}
 				if len(desc) > descSize {
-					descSize = len(desc)
+					descSize = utf8.RuneCountInString(desc)
 				}
 				cmdsANDdescs[cmd] = desc
 			}
 		}
-		tempFileOut("+" + strings.Repeat("-", cmdSize+2) + "+" + strings.Repeat("-", descSize+2) + "+\n")
+		strData += "+" + strings.Repeat("-", cmdSize+2) + "+" + strings.Repeat("-", descSize+2) + "+\n"
 		for k, v := range cmdsANDdescs {
-			tempFileOut(rightPad2Len("| "+k, " ", cmdSize+2) + " | ")
-			tempFileOut(rightPad2LenNorm(v, " ", descSize) + " |\n")
-			tempFileOut("+" + strings.Repeat("-", cmdSize+2) + "+" + strings.Repeat("-", descSize+2) + "+\n")
+			strData += rightPad2Len("| "+k, " ", cmdSize+2) + " | "
+			strData += rightPad2LenNorm(v, " ", descSize) + " |\n"
+			strData += "+" + strings.Repeat("-", cmdSize+2) + "+" + strings.Repeat("-", descSize+2) + "+\n"
 		}
 	}
-	OutLess()
+	OutLess(strData)
 }
