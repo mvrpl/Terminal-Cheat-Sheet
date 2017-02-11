@@ -44,15 +44,10 @@ sudo apt-get install chsht
 ```
 
 ## Install from RPM 
-####For CentOS 7.x
+####For CentOS 6+
 ```sh
 sudo yum update
-sudo yum install https://dl.dropboxusercontent.com/u/2243082/chsht-2.0-1.x86_64.rpm
-```
-####For CentOS 6.x
-```sh
-sudo yum update
-sudo yum install https://dl.dropboxusercontent.com/u/2243082/chsht-2.0-1-Centos6.x86_64.rpm
+sudo yum install https://rawgit.com/mvrpl/Terminal-Cheat-Sheet/master/RPMBUILD/RPMS/x86_64/chsht-0.1.3-1.x86_64.rpm
 ```
 
 ## Download compiled
