@@ -30,8 +30,8 @@ func NormalizeString(text string) string {
 func rightPad2Len(str, pad string, lenght int) string {
 	for {
 		str += pad
-		if len(str) > lenght {
-			return str[0:lenght]
+		if utf8.RuneCountInString(str) > lenght {
+			return str
 		}
 	}
 }
@@ -39,7 +39,7 @@ func rightPad2Len(str, pad string, lenght int) string {
 func rightPad2LenNorm(s string, padStr string, overallLen int) string {
 	s = NormalizeString(s)
 	var padCountInt int
-	padCountInt = 1 + ((overallLen - len(padStr)) / len(padStr))
+	padCountInt = 1 + ((overallLen - utf8.RuneCountInString(padStr)) / utf8.RuneCountInString(padStr))
 	var retStr = s + strings.Repeat(padStr, padCountInt)
 	return retStr[:overallLen]
 }
@@ -94,7 +94,6 @@ func main() {
 	if _, err := os.Stat(os.Getenv("HOME") + "/.cheat_sheets.db"); os.IsNotExist(err) {
 		updateDB()
 	}
-	_, err := os.Create(os.Getenv("HOME") + "/.chshtout.txt")
 	db, err := sql.Open("sqlite3", os.Getenv("HOME")+"/.cheat_sheets.db")
 	check(err)
 	dbtables, err := db.Query("select name from sqlite_master where type = 'table'")
@@ -188,7 +187,7 @@ func main() {
 		}
 		strData += "+" + strings.Repeat("-", cmdSize+2) + "+" + strings.Repeat("-", descSize+2) + "+\n"
 		for k, v := range cmdsANDdescs {
-			strData += rightPad2Len("| "+k, " ", cmdSize+2) + " | "
+			strData += rightPad2Len("| "+k, " ", cmdSize+2) + "| "
 			strData += rightPad2LenNorm(v, " ", descSize) + " |\n"
 			strData += "+" + strings.Repeat("-", cmdSize+2) + "+" + strings.Repeat("-", descSize+2) + "+\n"
 		}
