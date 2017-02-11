@@ -1,5 +1,5 @@
 Name: chsht
-Version: 2.0
+Version: 0.1.3
 Release: 1
 Summary: Terminal Cheat Sheet
 Requires: less
@@ -28,5 +28,5 @@ install chsht $RPM_BUILD_ROOT/usr/local/bin/chsht
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Tue Oct 11 2016 Marcos Lima <mvrpl@icloud.com> - 2.0
+* Tue Oct 11 2016 Marcos Lima <mvrpl@icloud.com> - 0.1.3
 - Initial build
