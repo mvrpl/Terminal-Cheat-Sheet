@@ -43,6 +43,11 @@ sudo add-apt-repository ppa:mvrpl/chsht -y && sudo apt-get update
 sudo apt-get install chsht
 ```
 
+## Install formula for homebrew
+```sh
+brew install chsht
+```
+
 ## Install from RPM 
 ####For CentOS 6+
 ```sh
