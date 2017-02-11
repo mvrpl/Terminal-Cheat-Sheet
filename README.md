@@ -50,16 +50,6 @@ sudo yum update
 sudo yum install https://rawgit.com/mvrpl/Terminal-Cheat-Sheet/master/RPMBUILD/RPMS/x86_64/chsht-0.1.3-1.x86_64.rpm
 ```
 
-## Download compiled
-
-##### Choose your version: [Centos6|Centos7|MacSierra|Ubuntu64]
-```sh
-wget "https://github.com/mvrpl/Terminal-Cheat-Sheet/blob/master/compiled/[Centos6|Centos7|MacSierra|Ubuntu64]/chsht?raw=true" -O chsht
-chmod 755 chsht
-./chsht tmux
-```
-Optional: Add **chsht** to your PATH
-
 ## License
 
 FREE
