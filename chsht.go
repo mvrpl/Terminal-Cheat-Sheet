@@ -47,6 +47,7 @@ func rightPad2LenNorm(s string, padStr string, overallLen int) string {
 func OutLess(output string) {
 	var in io.WriteCloser
 	var cmd *exec.Cmd
+	os.Setenv("LESSCHARSET", "utf-8")
 	cmd = exec.Command("/usr/bin/less", "-S", "-R")
 	in, _ = cmd.StdinPipe()
 	cmd.Stdout = os.Stdout
