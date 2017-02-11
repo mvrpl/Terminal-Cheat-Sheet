@@ -1,13 +1,15 @@
 #!/bin/sh
 
+apt-get install build-essential dh-make devscripts
+
 # Export DEB variables
 export DEBEMAIL="mvrpl@icloud.com"
 export DEBFULLNAME="Marcos Lima"
 
-SOURCEBINPATH=~/Documentos/Terminal-Cheat-Sheet/compiled/Ubuntu64 # Set path of bin
+SOURCEBINPATH=/Terminal-Cheat-Sheet/compiled/Ubuntu64 # Set path of bin
 SOURCEBIN=chsht # Bin name
 DEBFOLDER=~/chsht # Package directory in user HOME
-DEBVERSION=2.0 # Set version of package
+DEBVERSION=0.1.3 # Set version of package
 DEBFOLDERNAME=$DEBFOLDER-$DEBVERSION # Complete packge folder name in user HOME
 
 # Create your scripts source dir
@@ -42,7 +44,7 @@ debuild -S -k$(gpg --list-secret-keys --keyid-format LONG | awk '{if(index($0, "
 cd $HOME
 
 # Upload change to launchpad.net
-dput ppa:mvrpl/chsht chsht_2.0_source.changes
+dput ppa:mvrpl/chsht chsht_0.1.3_source.changes
 
 # Running in Bash Shell
 # chmod 755 build_tcs.sh
