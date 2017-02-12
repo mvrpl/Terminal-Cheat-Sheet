@@ -45,7 +45,7 @@ sudo apt-get install chsht
 
 ## Install formula for homebrew
 ```sh
-brew install chsht
+brew install mvrpl/chsht/chsht
 ```
 
 ## Install from RPM 
