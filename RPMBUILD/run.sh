@@ -1,4 +1,4 @@
-yum install rpmdevtools wget -y
+yum install rpmdevtools wget gcc -y
 echo '%_topdir %(pwd)' > ~/.rpmmacros
 wget https://storage.googleapis.com/golang/go1.8.linux-amd64.tar.gz
 tar -xvf go1.8.linux-amd64.tar.gz -C /usr/local
