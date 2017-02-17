@@ -13,12 +13,13 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 	"unicode"
 	"unicode/utf8"
 )
 
 const (
-	version = "0.1.3"
+	version = "0.1.4"
 )
 
 func NormalizeString(text string) string {
@@ -75,8 +76,15 @@ func updateDB() {
 	db, err := os.Create(os.Getenv("HOME") + "/.cheat_sheets.db")
 	check(err)
 	defer db.Close()
-	resp, err := http.Get("https://github.com/mvrpl/Terminal-Cheat-Sheet/blob/master/cheat_sheets.db?raw=true")
-	check(err)
+	timeout := time.Duration(5 * time.Second)
+	client := http.Client{
+		Timeout: timeout,
+	}
+	resp, err := client.Get("https://github.com/mvrpl/Terminal-Cheat-Sheet/blob/master/cheat_sheets.db?raw=true")
+	if err != nil {
+		fmt.Println("Error updating database!")
+		os.Exit(1)
+	}
 	defer resp.Body.Close()
 	io.Copy(db, resp.Body)
 }
