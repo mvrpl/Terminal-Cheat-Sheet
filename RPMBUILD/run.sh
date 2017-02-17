@@ -11,6 +11,6 @@ go get golang.org/x/text/runes
 cd /Terminal-Cheat-Sheet
 go build -o chsht
 tar cvfz chsht-0.1.4.tar.gz chsht
-mv chsht-0.1.4.tar.gz /Terminal-Cheat-Sheet/RPMBUILD/RPMS/x86_64
+mv chsht-0.1.4.tar.gz /Terminal-Cheat-Sheet/RPMBUILD/SOURCES
 cd /Terminal-Cheat-Sheet/RPMBUILD
 rpmbuild -ba SPECS/chsht.spec
