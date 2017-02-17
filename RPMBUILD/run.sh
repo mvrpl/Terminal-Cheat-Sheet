@@ -1,7 +1,7 @@
 yum install rpmdevtools wget gcc -y
 echo '%_topdir %(pwd)' > ~/.rpmmacros
-wget https://storage.googleapis.com/golang/go1.8.linux-amd64.tar.gz
-tar -xvf go1.8.linux-amd64.tar.gz -C /usr/local
+wget https://storage.googleapis.com/golang/go1.7.5.linux-amd64.tar.gz
+tar -xvf go1.7.5.linux-amd64.tar.gz -C /usr/local
 mkdir ~/.go
 export GOPATH=~/.go
 export GOROOT=/usr/local/go
