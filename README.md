@@ -31,17 +31,11 @@ chsht --version
 
 ## Version
 
-0.1.3
+0.1.4
 
 ## Screenshot
 
 ![](https://s11.postimg.org/h5j75navn/Captura_de_tela_2016_10_09_14_06_28.png)
-
-## Install from apt-get
-```sh
-sudo add-apt-repository ppa:mvrpl/chsht -y && sudo apt-get update
-sudo apt-get install chsht
-```
 
 ## Install formula for homebrew
 ```sh
