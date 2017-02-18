@@ -7,7 +7,7 @@ Requires: less
 Group: Applications
 License: GPLv2
 URL: http://mvrpl.com.br/
-Source0: %{name}-%{version}.tar.gz
+Source0: rpm-%{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %description
