@@ -3,14 +3,16 @@ chshtver="0.1.4"
 find . -regex ".*chsht-[0-9]\.[0-9]\.[0-9].*" | xargs rm -Rf
 yum install rpmdevtools wget gcc -y
 echo '%_topdir %(pwd)' > ~/.rpmmacros
-wget https://storage.googleapis.com/golang/go${gover}.linux-amd64.tar.gz
-tar -xvf go${gover}.linux-amd64.tar.gz -C /usr/local
+export GOROOT=/usr/local/go
 mkdir ~/.go
 export GOPATH=~/.go
-export GOROOT=/usr/local/go
 export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
-go get github.com/mattn/go-sqlite3
-go get golang.org/x/text/runes
+if ! type go &> /dev/null; then
+  wget https://storage.googleapis.com/golang/go${gover}.linux-amd64.tar.gz
+  tar -xvf go${gover}.linux-amd64.tar.gz -C /usr/local
+  go get github.com/mattn/go-sqlite3
+  go get golang.org/x/text/runes
+fi
 cd /Terminal-Cheat-Sheet
 go build -o chsht
 mkdir chsht-${chshtver}
