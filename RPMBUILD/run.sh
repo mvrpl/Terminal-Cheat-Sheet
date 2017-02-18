@@ -1,5 +1,6 @@
 gover="1.8"
 chshtver="0.1.4"
+find . -regex ".*chsht-[0-9]\.[0-9]\.[0-9].*" | xargs rm -Rf
 yum install rpmdevtools wget gcc -y
 echo '%_topdir %(pwd)' > ~/.rpmmacros
 wget https://storage.googleapis.com/golang/go${gover}.linux-amd64.tar.gz
