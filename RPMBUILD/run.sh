@@ -17,9 +17,9 @@ cd /Terminal-Cheat-Sheet
 go build -o chsht
 mkdir chsht-${chshtver}
 mv chsht chsht-${chshtver}
-tar cvfz chsht-${chshtver}.tar.gz chsht-${chshtver}/
+tar cvfz rpm-chsht-${chshtver}.tar.gz chsht-${chshtver}/
 rm -Rf chsht-${chshtver}
-mv chsht-${chshtver}.tar.gz /Terminal-Cheat-Sheet/RPMBUILD/SOURCES
+mv rpm-chsht-${chshtver}.tar.gz /Terminal-Cheat-Sheet/RPMBUILD/SOURCES
 cd /Terminal-Cheat-Sheet/RPMBUILD
 rpmbuild -ba SPECS/chsht.spec
 rm -Rf go${gover}.linux-amd64.tar.gz
