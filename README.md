@@ -46,7 +46,7 @@ brew install mvrpl/chsht/chsht
 ####For CentOS 6+
 ```sh
 sudo yum update
-sudo yum install https://rawgit.com/mvrpl/Terminal-Cheat-Sheet/master/RPMBUILD/RPMS/x86_64/chsht-0.1.3-1.x86_64.rpm
+sudo yum install https://cdn.rawgit.com/mvrpl/Terminal-Cheat-Sheet/267f13a8/RPMBUILD/RPMS/x86_64/chsht-0.1.4-1.x86_64.rpm
 ```
 
 ## License
