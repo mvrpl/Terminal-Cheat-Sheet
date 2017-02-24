@@ -14,6 +14,7 @@ import (
 	"os/exec"
 	"strings"
 	"time"
+	"sort"
 	"unicode"
 	"unicode/utf8"
 )
@@ -139,6 +140,7 @@ func main() {
 
 	if os.Args[1] == "--list" {
 		fmt.Println("Available:")
+		sort.Strings(tables)
 		for _, soft := range tables {
 			fmt.Println("* " + soft)
 		}
