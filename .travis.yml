@@ -6,7 +6,5 @@ go:
 script: 
   - go get github.com/mattn/go-sqlite3
   - go get golang.org/x/text/runes
-  - go build
-  - ls
-  - pwd
+  - go build -o chsht
   - ./chsht --version
