@@ -4,4 +4,7 @@ go:
   - 1.7
   - 1.8
 script: 
-  - go get github.com/mattn/go-sqlite3 && go get golang.org/x/text/runes && go build && ./chsht --version
+  - go get github.com/mattn/go-sqlite3
+  - go get golang.org/x/text/runes
+  - go build
+  - ./chsht --version
