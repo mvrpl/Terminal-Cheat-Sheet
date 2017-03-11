@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/mvrpl/Terminal-Cheat-Sheet.svg?branch=master)](https://travis-ci.org/mvrpl/Terminal-Cheat-Sheet)
+[![Go Report Card](https://goreportcard.com/badge/github.com/mvrpl/Terminal-Cheat-Sheet)](https://goreportcard.com/report/github.com/mvrpl/Terminal-Cheat-Sheet)
 # Terminal Cheat Sheets
 
 Cheat Sheets on terminal for Unix Like. Written in GO with the following packages below:
