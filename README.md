@@ -53,4 +53,4 @@ sudo yum install https://cdn.rawgit.com/mvrpl/Terminal-Cheat-Sheet/267f13a8/RPMB
 
 ## License
 
-FREE
+MIT
