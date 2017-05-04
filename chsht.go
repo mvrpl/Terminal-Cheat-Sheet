@@ -14,13 +14,12 @@ import (
 	"os/exec"
 	"strings"
 	"time"
-	"sort"
 	"unicode"
 	"unicode/utf8"
 )
 
 const (
-	version = "0.1.4"
+	version = "0.1.5"
 )
 
 func NormalizeString(text string) string {
@@ -74,9 +73,6 @@ func check(e error) {
 }
 
 func updateDB() {
-	db, err := os.Create(os.Getenv("HOME") + "/.cheat_sheets.db")
-	check(err)
-	defer db.Close()
 	timeout := time.Duration(5 * time.Second)
 	client := http.Client{
 		Timeout: timeout,
@@ -86,6 +82,9 @@ func updateDB() {
 		fmt.Println("Error updating database!")
 		os.Exit(1)
 	}
+	db, err := os.Create(os.Getenv("HOME") + "/.cheat_sheets.db")
+	check(err)
+	defer db.Close()
 	defer resp.Body.Close()
 	io.Copy(db, resp.Body)
 }
@@ -140,7 +139,6 @@ func main() {
 
 	if os.Args[1] == "--list" {
 		fmt.Println("Available:")
-		sort.Strings(tables)
 		for _, soft := range tables {
 			fmt.Println("* " + soft)
 		}
