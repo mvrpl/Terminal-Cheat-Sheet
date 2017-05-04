@@ -34,7 +34,7 @@ chsht --version
 
 ## Version
 
-0.1.4
+0.1.5
 
 ## Screenshot
 
