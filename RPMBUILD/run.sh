@@ -1,7 +1,7 @@
 gover="1.8"
-chshtver="0.1.4"
+chshtver="0.1.5"
 find . -regex ".*chsht-[0-9]\.[0-9]\.[0-9].*" | xargs rm -Rf
-yum install rpmdevtools wget gcc -y
+sudo yum install rpmdevtools wget gcc -y
 echo '%_topdir %(pwd)' > ~/.rpmmacros
 export GOROOT=/usr/local/go
 mkdir ~/.go
@@ -13,13 +13,13 @@ if ! type go &> /dev/null; then
   go get github.com/mattn/go-sqlite3
   go get golang.org/x/text/runes
 fi
-cd /Terminal-Cheat-Sheet
+cd $HOME/Terminal-Cheat-Sheet
 go build -o chsht
 mkdir chsht-${chshtver}
 mv chsht chsht-${chshtver}
 tar cvfz rpm-chsht-${chshtver}.tar.gz chsht-${chshtver}/
 rm -Rf chsht-${chshtver}
-mv rpm-chsht-${chshtver}.tar.gz /Terminal-Cheat-Sheet/RPMBUILD/SOURCES
-cd /Terminal-Cheat-Sheet/RPMBUILD
+mv rpm-chsht-${chshtver}.tar.gz $HOME/Terminal-Cheat-Sheet/RPMBUILD/SOURCES
+cd $HOME/Terminal-Cheat-Sheet/RPMBUILD
 rpmbuild -ba SPECS/chsht.spec
 rm -Rf go${gover}.linux-amd64.tar.gz
