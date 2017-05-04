@@ -40,11 +40,6 @@ chsht --version
 
 ![](https://s11.postimg.org/h5j75navn/Captura_de_tela_2016_10_09_14_06_28.png)
 
-## Install formula for homebrew
-```sh
-brew install mvrpl/chsht/chsht
-```
-
 ## Install from RPM 
 #### For CentOS 6+
 ```sh
