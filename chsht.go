@@ -4,18 +4,20 @@ import (
 	"bytes"
 	"database/sql"
 	"fmt"
-	_ "github.com/mattn/go-sqlite3"
-	"golang.org/x/text/runes"
-	"golang.org/x/text/transform"
-	"golang.org/x/text/unicode/norm"
 	"io"
 	"net/http"
 	"os"
 	"os/exec"
+	"runtime"
 	"strings"
 	"time"
 	"unicode"
 	"unicode/utf8"
+
+	_ "github.com/mattn/go-sqlite3"
+	"golang.org/x/text/runes"
+	"golang.org/x/text/transform"
+	"golang.org/x/text/unicode/norm"
 )
 
 const (
@@ -49,7 +51,16 @@ func OutLess(output string) {
 	var in io.WriteCloser
 	var cmd *exec.Cmd
 	os.Setenv("LESSCHARSET", "utf-8")
-	cmd = exec.Command("/usr/bin/less", "-S", "-R")
+	os_name := runtime.GOOS
+	switch os_name {
+	case "windows":
+		homedir, err := os.UserHomeDir()
+		check(err)
+		bin_less := fmt.Sprintf("%s\\scoop\\shims\\less.EXE", homedir)
+		cmd = exec.Command(bin_less, "-S", "-R")
+	case "darwin", "linux":
+		cmd = exec.Command("/usr/bin/less", "-S", "-R")
+	}
 	in, _ = cmd.StdinPipe()
 	cmd.Stdout = os.Stdout
 	io.Copy(in, bytes.NewBufferString(output))
@@ -82,7 +93,8 @@ func updateDB() {
 		fmt.Println("Error updating database!")
 		os.Exit(1)
 	}
-	db, err := os.Create(os.Getenv("HOME") + "/.cheat_sheets.db")
+	home, _ := os.UserHomeDir()
+	db, err := os.Create(home + string(os.PathSeparator) + ".cheat_sheets.db")
 	check(err)
 	defer db.Close()
 	defer resp.Body.Close()
@@ -100,10 +112,11 @@ func help() {
 }
 
 func main() {
-	if _, err := os.Stat(os.Getenv("HOME") + "/.cheat_sheets.db"); os.IsNotExist(err) {
+	home, _ := os.UserHomeDir()
+	if _, err := os.Stat(home + string(os.PathSeparator) + ".cheat_sheets.db"); os.IsNotExist(err) {
 		updateDB()
 	}
-	db, err := sql.Open("sqlite3", os.Getenv("HOME")+"/.cheat_sheets.db")
+	db, err := sql.Open("sqlite3", home+string(os.PathSeparator)+".cheat_sheets.db")
 	check(err)
 	dbtables, err := db.Query("select name from sqlite_master where type = 'table'")
 	check(err)
