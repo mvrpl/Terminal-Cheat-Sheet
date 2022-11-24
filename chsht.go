@@ -50,7 +50,6 @@ func rightPad2LenNorm(s string, padStr string, overallLen int) string {
 func OutLess(output string) {
 	var in io.WriteCloser
 	var cmd *exec.Cmd
-	os.Setenv("LESSCHARSET", "utf-8")
 	os_name := runtime.GOOS
 	switch os_name {
 	case "windows":
@@ -59,6 +58,7 @@ func OutLess(output string) {
 		bin_less := fmt.Sprintf("%s\\scoop\\shims\\less.EXE", homedir)
 		cmd = exec.Command(bin_less, "-S", "-R")
 	case "darwin", "linux":
+		os.Setenv("LESSCHARSET", "utf-8")
 		cmd = exec.Command("/usr/bin/less", "-S", "-R")
 	}
 	in, _ = cmd.StdinPipe()
