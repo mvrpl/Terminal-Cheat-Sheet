@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"database/sql"
 	"fmt"
 	"io"
@@ -63,9 +62,12 @@ func OutLess(output string) {
 	}
 	in, _ = cmd.StdinPipe()
 	cmd.Stdout = os.Stdout
-	io.Copy(in, bytes.NewBufferString(output))
-	in.Close()
-	cmd.Run()
+	go func(w io.WriteCloser, data []byte) {
+		w.Write(data)
+		w.Close()
+	}(in, []byte(output))
+	err := cmd.Run()
+	check(err)
 }
 
 func containsStr(slice []string, item string) bool {
