@@ -1,0 +1,10 @@
+{
+    "version": "0.2.0",
+    "url": "https://github.com/mvrpl/Terminal-Cheat-Sheet/blob/master/compiled/0.2.0/WIN11/chsht.exe?raw=true",
+    "description": "Cheat Sheets on Terminal",
+    "license": "GPL-3.0-only|BSD-3-Clause",
+    "suggest": {
+        "less": "less"
+    },
+    "bin": "chsht.exe"
+}
