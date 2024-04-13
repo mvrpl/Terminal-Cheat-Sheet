@@ -52,16 +52,16 @@ jobs:
       - name: Build windows
         if: matrix.runner == 'windows-latest'
         run: |
-          export CGO_ENABLE=1
+          $env:CGO_ENABLE=1
           go mod tidy
           go build -o chsht-${{ matrix.name }}.exe .
       - uses: actions/upload-artifact@v4
         with:
-          name: awsu-${{ matrix.runner }}-amd64
+          name: chsht-${{ matrix.name }}
           if: matrix.runner == 'windows-latest'
           path: chsht-${{ matrix.name }}.exe
       - uses: actions/upload-artifact@v4
         with:
-          name: awsu-${{ matrix.runner }}-amd64
+          name: chsht-${{ matrix.name }}
           if: matrix.runner != 'windows-latest'
           path: chsht-${{ matrix.name }}
