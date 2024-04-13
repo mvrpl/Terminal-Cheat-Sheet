@@ -6,7 +6,7 @@ on:
       - "*"
 
 jobs:
-  goreleaser:
+  build:
     runs-on: ${{ matrix.runner }}
     strategy:
       matrix:
@@ -33,35 +33,46 @@ jobs:
         with:
           go-version: 1.22
       - name: Setup dependencies
+        if: matrix.runner == 'windows-latest'
+        run: |
+          msiexec.exe /i https://awscli.amazonaws.com/AWSCLIV2.msi /qn
+      - name: Setup dependencies
+        if: matrix.runner == 'macos-latest'
+        run: |
+          curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
+          sudo installer -pkg AWSCLIV2.pkg -target /
+      - name: Setup dependencies
         if: matrix.runner == 'ubuntu-latest'
         run: |
           sudo apt-get update -q
-          sudo apt-get install -qqy build-essential software-properties-common pkg-config wget libpcsclite-dev
+          sudo apt-get install -qqy build-essential software-properties-common pkg-config wget curl unzip libpcsclite-dev
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: sa-east-1
       - name: Build darwin
         if: matrix.runner == 'macos-latest'
         run: |
           export CGO_ENABLE=1
           go mod tidy
           go build -o chsht-${{ matrix.name }} .
+          aws s3 cp ./chsht-${{ matrix.name }} s3://artifacts-mvrpl/chsht-${{ matrix.name }}-${{github.ref_name}}
       - name: Build linux
         if: matrix.runner == 'ubuntu-latest'
         run: |
           export CGO_ENABLE=1
           go mod tidy
           go build -o chsht-${{ matrix.name }} .
+          aws s3 cp ./chsht-${{ matrix.name }} s3://artifacts-mvrpl/chsht-${{ matrix.name }}-${{github.ref_name}}
       - name: Build windows
         if: matrix.runner == 'windows-latest'
         run: |
           $env:CGO_ENABLE=1
           go mod tidy
           go build -o chsht-${{ matrix.name }}.exe .
-      - uses: actions/upload-artifact@v4
-        with:
-          name: chsht-${{ matrix.name }}
-          if: matrix.runner == 'windows-latest'
-          path: chsht-${{ matrix.name }}.exe
-      - uses: actions/upload-artifact@v4
-        with:
-          name: chsht-${{ matrix.name }}
-          if: matrix.runner != 'windows-latest'
-          path: chsht-${{ matrix.name }}
+          aws s3 cp ./chsht-${{ matrix.name }}.exe s3://artifacts-mvrpl/chsht-${{ matrix.name }}-${{github.ref_name}}.exe
