@@ -13,7 +13,6 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	_ "github.com/mattn/go-sqlite3"
 	"golang.org/x/text/runes"
 	"golang.org/x/text/transform"
 	"golang.org/x/text/unicode/norm"
