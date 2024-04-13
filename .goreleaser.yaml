@@ -19,6 +19,9 @@ builds:
   - env:
       - GO_VERSION=1.22
       - CGO_ENABLED=1
+    goarch:
+      - amd64
+      - arm64
     goos:
       - linux
       - windows
