@@ -18,6 +18,7 @@ before:
 builds:
   - env:
       - GO_VERSION=1.22
+      - CGO_ENABLED=1
     goos:
       - linux
       - windows
