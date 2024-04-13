@@ -61,18 +61,18 @@ jobs:
           export CGO_ENABLE=1
           go mod tidy
           go build -o chsht-${{ matrix.name }} .
-          aws s3 cp ./chsht-${{ matrix.name }} s3://artifacts-mvrpl/chsht/releases/${{github.ref_name}}/chsht-${{ matrix.name }}-${{github.ref_name}}
+          aws s3 cp ./chsht-${{ matrix.name }} s3://artifacts-mvrpl/chsht/releases/${{github.ref_name}}/chsht-${{ matrix.name }}
       - name: Build linux
         if: matrix.runner == 'ubuntu-latest'
         run: |
           export CGO_ENABLE=1
           go mod tidy
           go build -o chsht-${{ matrix.name }} .
-          aws s3 cp ./chsht-${{ matrix.name }} s3://artifacts-mvrpl/chsht/releases/${{github.ref_name}}/chsht-${{ matrix.name }}-${{github.ref_name}}
+          aws s3 cp ./chsht-${{ matrix.name }} s3://artifacts-mvrpl/chsht/releases/${{github.ref_name}}/chsht-${{ matrix.name }}
       - name: Build windows
         if: matrix.runner == 'windows-latest'
         run: |
           $env:CGO_ENABLE=1
           go mod tidy
           go build -o chsht-${{ matrix.name }}.exe .
-          aws s3 cp ./chsht-${{ matrix.name }}.exe s3://artifacts-mvrpl/chsht/releases/${{github.ref_name}}/chsht-${{ matrix.name }}-${{github.ref_name}}.exe
+          aws s3 cp ./chsht-${{ matrix.name }}.exe s3://artifacts-mvrpl/chsht/releases/${{github.ref_name}}/chsht-${{ matrix.name }}.exe
