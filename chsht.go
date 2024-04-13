@@ -20,7 +20,7 @@ import (
 )
 
 const (
-	version = "0.2.0"
+	version = "0.2.5"
 )
 
 func NormalizeString(text string) string {
@@ -189,32 +189,64 @@ func main() {
 		data[session] = append(data[session], commands)
 	}
 
-	var strData string
-	for key, value := range data {
-		strData += "+" + strings.Repeat("-", len(key)+2) + "+\n"
-		strData += "| \033[1m" + strings.ToUpper(key) + "\033[0m |\n"
-		strData += "+" + strings.Repeat("-", len(key)+2) + "+\n"
-		cmdSize := 0
-		descSize := 0
-		var cmdsANDdescs map[string]string
-		cmdsANDdescs = make(map[string]string)
-		for _, v := range value {
-			for cmd, desc := range v {
-				if len(cmd) > cmdSize {
-					cmdSize = utf8.RuneCountInString(cmd)
+	if len(os.Args) == 3 && os.Args[2] == "--save" {
+		var strDataMd string
+		for key, value := range data {
+			strDataMd += "#### " + strings.ToUpper(key) + "\n"
+			strDataMd += "|||\n|-|-|\n"
+			cmdSize := 0
+			descSize := 0
+			var cmdsANDdescs map[string]string
+			cmdsANDdescs = make(map[string]string)
+			for _, v := range value {
+				for cmd, desc := range v {
+					if len(cmd) > cmdSize {
+						cmdSize = utf8.RuneCountInString(cmd)
+					}
+					if len(desc) > descSize {
+						descSize = utf8.RuneCountInString(desc)
+					}
+					cmdsANDdescs[cmd] = desc
 				}
-				if len(desc) > descSize {
-					descSize = utf8.RuneCountInString(desc)
-				}
-				cmdsANDdescs[cmd] = desc
+			}
+			for k, v := range cmdsANDdescs {
+				strDataMd += fmt.Sprintf("`%s`|%s\n", k, v)
 			}
 		}
-		strData += "+" + strings.Repeat("-", cmdSize+2) + "+" + strings.Repeat("-", descSize+2) + "+\n"
-		for k, v := range cmdsANDdescs {
-			strData += rightPad2Len("| "+k, " ", cmdSize+2) + "| "
-			strData += rightPad2LenNorm(v, " ", descSize) + " |\n"
-			strData += "+" + strings.Repeat("-", cmdSize+2) + "+" + strings.Repeat("-", descSize+2) + "+\n"
+
+		fileName := fmt.Sprintf("%s.md", os.Args[1])
+		if err := os.WriteFile(fileName, []byte(strDataMd), 0755); err != nil {
+			fmt.Println("Send <program> --save")
+			panic(err)
 		}
+	} else {
+		var strData string
+		for key, value := range data {
+			strData += "+" + strings.Repeat("-", len(key)+2) + "+\n"
+			strData += "| \033[1m" + strings.ToUpper(key) + "\033[0m |\n"
+			strData += "+" + strings.Repeat("-", len(key)+2) + "+\n"
+			cmdSize := 0
+			descSize := 0
+			var cmdsANDdescs map[string]string
+			cmdsANDdescs = make(map[string]string)
+			for _, v := range value {
+				for cmd, desc := range v {
+					if len(cmd) > cmdSize {
+						cmdSize = utf8.RuneCountInString(cmd)
+					}
+					if len(desc) > descSize {
+						descSize = utf8.RuneCountInString(desc)
+					}
+					cmdsANDdescs[cmd] = desc
+				}
+			}
+			strData += "+" + strings.Repeat("-", cmdSize+2) + "+" + strings.Repeat("-", descSize+2) + "+\n"
+			for k, v := range cmdsANDdescs {
+				strData += rightPad2Len("| "+k, " ", cmdSize+2) + "| "
+				strData += rightPad2LenNorm(v, " ", descSize) + " |\n"
+				strData += "+" + strings.Repeat("-", cmdSize+2) + "+" + strings.Repeat("-", descSize+2) + "+\n"
+			}
+		}
+		OutLess(strData)
 	}
-	OutLess(strData)
 }
