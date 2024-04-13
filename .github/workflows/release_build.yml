@@ -7,22 +7,19 @@ on:
 
 jobs:
   goreleaser:
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-latest, macos-latest, windows-latest]
     steps:
-      - 
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - 
-        name: Set up Go
+      - name: Set up Go
         uses: actions/setup-go@v4
         with:
           go-version: 1.22
 
-      - 
-        name: Run GoReleaser
+      - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v5
         with:
           distribution: goreleaser
