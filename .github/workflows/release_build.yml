@@ -76,3 +76,21 @@ jobs:
           go mod tidy
           go build -o chsht-${{ matrix.name }}.exe .
           aws s3 cp ./chsht-${{ matrix.name }}.exe s3://artifacts-mvrpl/chsht/releases/${{github.ref_name}}/chsht-${{ matrix.name }}.exe
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            ## Binaries of version ${{ github.ref }}
+            | URL | System Architecture |
+            |-|-|
+            |https://artifacts-mvrpl.s3.sa-east-1.amazonaws.com/chsht/releases/${{ github.ref }}/chsht-win-amd64.exe|x86_64-pc-windows-msvc|
+            |https://artifacts-mvrpl.s3.sa-east-1.amazonaws.com/chsht/releases/${{ github.ref }}/chsht-macos-arm64|aarch64-apple-darwin|
+            |https://artifacts-mvrpl.s3.sa-east-1.amazonaws.com/chsht/releases/${{ github.ref }}/chsht-macos-amd64|x86_64-apple-darwin|
+            |https://artifacts-mvrpl.s3.sa-east-1.amazonaws.com/chsht/releases/${{ github.ref }}/chsht-linux-amd64|x86_64-unknown-linux-gnu|
+          draft: false
+          prerelease: false
