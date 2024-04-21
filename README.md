@@ -35,20 +35,7 @@ chsht --version
 
 ## Version
 
-0.1.5
-
-## Screenshot
-
-![](https://s11.postimg.org/h5j75navn/Captura_de_tela_2016_10_09_14_06_28.png)
-
-## Install from RPM 
-#### For CentOS 6+
-```sh
-sudo yum update
-sudo yum install https://cdn.rawgit.com/mvrpl/Terminal-Cheat-Sheet/515e6f99/RPMBUILD/RPMS/x86_64/chsht-0.1.5-1.x86_64.rpm
-```
-## See database
-[SQLite Viewer Online](https://sqliteonline.com/#fiddle-58f75932c55f5b9gj1oym9lq)
+0.2.9
 
 ## License
 
