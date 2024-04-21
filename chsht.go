@@ -20,7 +20,7 @@ import (
 )
 
 const (
-	version = "0.2.5"
+	version = "0.2.9"
 )
 
 func NormalizeString(text string) string {
@@ -107,6 +107,8 @@ func help() {
 	fmt.Println("version: " + version)
 	use := []string{"chsht vim", "Example: Show cheat sheet for vim."}
 	fmt.Println(strings.Join(use, "\n\t"))
+	save_md := []string{"chsht vim --save", "Flag --save to create markdown file (<software_name>.md) in current directory."}
+	fmt.Println(strings.Join(save_md, "\n\t"))
 	opt_update := []string{"chsht --update", "Update database, internet connection is required."}
 	fmt.Println(strings.Join(opt_update, "\n\t"))
 	opt_ls := []string{"chsht --list", "List sofwares with cheat sheets in database."}
