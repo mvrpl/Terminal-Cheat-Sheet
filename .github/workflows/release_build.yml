@@ -81,6 +81,13 @@ jobs:
     if: ${{ always() }}
     needs: [builds]
     steps:
+      - name: Get SHA256
+        id: get_sha256
+        run: |
+          echo "SHA256_WIN_AMD64=$(curl -sL https://artifacts-mvrpl.s3.sa-east-1.amazonaws.com/chsht/releases/${{ github.ref_name }}/chsht-win-amd64.exe | sha256sum | cut -d " " -f 1)" >> $GITHUB_ENV
+          echo "SHA256_MACOS_ARM64=$(curl -sL https://artifacts-mvrpl.s3.sa-east-1.amazonaws.com/chsht/releases/${{ github.ref_name }}/chsht-macos-arm64 | sha256sum | cut -d " " -f 1)" >> $GITHUB_ENV
+          echo "SHA256_MACOS_AMD64=$(curl -sL https://artifacts-mvrpl.s3.sa-east-1.amazonaws.com/chsht/releases/${{ github.ref_name }}/chsht-macos-amd64 | sha256sum | cut -d " " -f 1)" >> $GITHUB_ENV
+          echo "SHA256_LINUX_AMD64=$(curl -sL https://artifacts-mvrpl.s3.sa-east-1.amazonaws.com/chsht/releases/${{ github.ref_name }}/chsht-linux-amd64 | sha256sum | cut -d " " -f 1)" >> $GITHUB_ENV
       - name: Create Release
         id: create_release
         uses: actions/create-release@latest
@@ -91,11 +98,11 @@ jobs:
           release_name: Release ${{ github.ref }}
           body: |
             ## Binaries of version ${{ github.ref_name }}
-            | URL | System Architecture |
-            |-|-|
-            |https://artifacts-mvrpl.s3.sa-east-1.amazonaws.com/chsht/releases/${{ github.ref_name }}/chsht-win-amd64.exe|x86_64-pc-windows-msvc|
-            |https://artifacts-mvrpl.s3.sa-east-1.amazonaws.com/chsht/releases/${{ github.ref_name }}/chsht-macos-arm64|aarch64-apple-darwin|
-            |https://artifacts-mvrpl.s3.sa-east-1.amazonaws.com/chsht/releases/${{ github.ref_name }}/chsht-macos-amd64|x86_64-apple-darwin|
-            |https://artifacts-mvrpl.s3.sa-east-1.amazonaws.com/chsht/releases/${{ github.ref_name }}/chsht-linux-amd64|x86_64-unknown-linux-gnu|
+            | URL | System Architecture | SHA256 |
+            |-|-|-|
+            |https://artifacts-mvrpl.s3.sa-east-1.amazonaws.com/chsht/releases/${{ github.ref_name }}/chsht-win-amd64.exe|x86_64-pc-windows-msvc|${{env.SHA256_WIN_AMD64}}|
+            |https://artifacts-mvrpl.s3.sa-east-1.amazonaws.com/chsht/releases/${{ github.ref_name }}/chsht-macos-arm64|aarch64-apple-darwin|${{env.SHA256_MACOS_ARM64}}|
+            |https://artifacts-mvrpl.s3.sa-east-1.amazonaws.com/chsht/releases/${{ github.ref_name }}/chsht-macos-amd64|x86_64-apple-darwin|${{env.SHA256_MACOS_AMD64}}|
+            |https://artifacts-mvrpl.s3.sa-east-1.amazonaws.com/chsht/releases/${{ github.ref_name }}/chsht-linux-amd64|x86_64-unknown-linux-gnu|${{env.SHA256_LINUX_AMD64}}|
           draft: false
           prerelease: false
