@@ -12,17 +12,24 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"cloud.google.com/go/firestore"
 	_ "github.com/mattn/go-sqlite3"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"golang.org/x/text/runes"
 	"golang.org/x/text/transform"
 	"golang.org/x/text/unicode/norm"
-	"google.golang.org/api/iterator"
 )
 
 const (
 	version = "0.3.0"
 )
+
+type Command struct {
+	Command string `bson:"command,omitempty"`
+	About   string `bson:"about,omitempty"`
+	Session string `bson:"session,omitempty"`
+}
 
 func NormalizeString(text string) string {
 	t := transform.Chain(norm.NFD, runes.Remove(runes.In(unicode.Mn)), norm.NFC)
@@ -86,6 +93,13 @@ func check(e error) {
 	}
 }
 
+func getEnv(key, fallback string) string {
+	if value, ok := os.LookupEnv(key); ok {
+		return value
+	}
+	return fallback
+}
+
 func updateDB() {
 	home, _ := os.UserHomeDir()
 
@@ -93,38 +107,45 @@ func updateDB() {
 	check(err)
 	defer db.Close()
 
-	ctx := context.Background()
-	client, err := firestore.NewClient(ctx, "mvrpl-190916")
+	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
+	mongoURI := getEnv("MONGODB_CS_URI", "mongodb+srv://public:yDPLVycT6GymvAye@terminalcheatsheet.fbozh8z.mongodb.net/?retryWrites=true&w=majority&appName=TerminalCheatSheet")
+	opts := options.Client().ApplyURI(mongoURI).SetServerAPIOptions(serverAPI)
+	client, err := mongo.Connect(context.TODO(), opts)
 	check(err)
-	defer client.Close()
+	defer func() {
+		err = client.Disconnect(context.TODO())
+		check(err)
+	}()
+	mdb := client.Database("TerminalCheatSheet")
+	result, err := mdb.ListCollectionNames(context.TODO(), bson.D{})
+	check(err)
 
 	var sql string
-	iter := client.Collections(ctx)
-	for {
-		coll, err := iter.Next()
-		if err == iterator.Done {
-			break
-		}
 
+	for _, coll := range result {
 		sql = fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s (
 			command TEXT PRIMARY KEY,
 			about TEXT NOT NULL,
 			session TEXT NOT NULL
-		 );`, coll.ID)
+		 );`, coll)
 
 		_, errsql := db.Exec(sql)
 		check(errsql)
 
-		iterDocs := coll.Documents(ctx)
-		defer iterDocs.Stop()
-		for {
-			doc, err := iterDocs.Next()
-			if err == iterator.Done {
-				break
-			}
-			stmt, err := db.Prepare(fmt.Sprintf("INSERT OR REPLACE INTO %s (command, about, session) values (?, ?, ?);", coll.ID))
+		coll := mdb.Collection(coll)
+
+		cursor, err := coll.Find(context.TODO(), bson.D{})
+		check(err)
+
+		var results []Command
+		if err = cursor.All(context.TODO(), &results); err != nil {
+			panic(err)
+		}
+
+		for _, result := range results {
+			stmt, err := db.Prepare(fmt.Sprintf("INSERT OR REPLACE INTO %s (command, about, session) values (?, ?, ?);", coll.Name()))
 			check(err)
-			_, err = stmt.Exec(doc.Data()["command"].(string), doc.Data()["about"].(string), doc.Data()["session"].(string))
+			_, err = stmt.Exec(result.Command, result.About, result.Session)
 			check(err)
 		}
 	}
