@@ -1,26 +1,27 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"io"
-	"net/http"
 	"os"
 	"os/exec"
 	"runtime"
 	"strings"
-	"time"
 	"unicode"
 	"unicode/utf8"
 
+	"cloud.google.com/go/firestore"
 	_ "github.com/mattn/go-sqlite3"
 	"golang.org/x/text/runes"
 	"golang.org/x/text/transform"
 	"golang.org/x/text/unicode/norm"
+	"google.golang.org/api/iterator"
 )
 
 const (
-	version = "0.2.9"
+	version = "0.3.0"
 )
 
 func NormalizeString(text string) string {
@@ -86,21 +87,47 @@ func check(e error) {
 }
 
 func updateDB() {
-	timeout := time.Duration(5 * time.Second)
-	client := http.Client{
-		Timeout: timeout,
-	}
-	resp, err := client.Get("https://github.com/mvrpl/Terminal-Cheat-Sheet/blob/master/cheat_sheets.db?raw=true")
-	if err != nil {
-		fmt.Println("Error updating database!")
-		os.Exit(1)
-	}
 	home, _ := os.UserHomeDir()
-	db, err := os.Create(home + string(os.PathSeparator) + ".cheat_sheets.db")
+
+	db, err := sql.Open("sqlite3", home+string(os.PathSeparator)+".cheat_sheets.db")
 	check(err)
 	defer db.Close()
-	defer resp.Body.Close()
-	io.Copy(db, resp.Body)
+
+	ctx := context.Background()
+	client, err := firestore.NewClient(ctx, "mvrpl-190916")
+	check(err)
+	defer client.Close()
+
+	var sql string
+	iter := client.Collections(ctx)
+	for {
+		coll, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+
+		sql = fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s (
+			command TEXT PRIMARY KEY,
+			about TEXT NOT NULL,
+			session TEXT NOT NULL
+		 );`, coll.ID)
+
+		_, errsql := db.Exec(sql)
+		check(errsql)
+
+		iterDocs := coll.Documents(ctx)
+		defer iterDocs.Stop()
+		for {
+			doc, err := iterDocs.Next()
+			if err == iterator.Done {
+				break
+			}
+			stmt, err := db.Prepare(fmt.Sprintf("INSERT OR REPLACE INTO %s (command, about, session) values (?, ?, ?);", coll.ID))
+			check(err)
+			_, err = stmt.Exec(doc.Data()["command"].(string), doc.Data()["about"].(string), doc.Data()["session"].(string))
+			check(err)
+		}
+	}
 }
 
 func help() {
