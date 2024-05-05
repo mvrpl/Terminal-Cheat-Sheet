@@ -132,6 +132,11 @@ func updateDB() {
 		_, errsql := db.Exec(sql)
 		check(errsql)
 
+		sql = fmt.Sprintf(`DELETE FROM %s;`, coll)
+
+		_, errsqlt := db.Exec(sql)
+		check(errsqlt)
+
 		coll := mdb.Collection(coll)
 
 		cursor, err := coll.Find(context.TODO(), bson.D{})
