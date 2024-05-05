@@ -69,6 +69,8 @@ jobs:
           go mod tidy
           go build -o chsht-${{ matrix.name }} .
           aws s3 cp ./chsht-${{ matrix.name }} s3://artifacts-mvrpl/chsht/releases/${{github.ref_name}}/chsht-${{ matrix.name }}
+          echo '{"version": "${{ github.ref_name }}"}' > latest.json
+          aws s3 cp latest.json s3://artifacts-mvrpl/chsht/releases/latest.json
       - name: Build windows
         if: matrix.runner == 'windows-latest'
         run: |
@@ -84,8 +86,6 @@ jobs:
       - name: Get SHA256
         id: get_sha256
         run: |
-          echo {"version": "${{ github.ref_name }}"} > latest.json
-          aws s3 cp latest.json s3://artifacts-mvrpl/chsht/releases/latest.json
           echo "SHA256_WIN_AMD64=$(curl -sL https://artifacts-mvrpl.s3.sa-east-1.amazonaws.com/chsht/releases/${{ github.ref_name }}/chsht-win-amd64.exe | sha256sum | cut -d " " -f 1)" >> $GITHUB_ENV
           echo "SHA256_MACOS_ARM64=$(curl -sL https://artifacts-mvrpl.s3.sa-east-1.amazonaws.com/chsht/releases/${{ github.ref_name }}/chsht-macos-arm64 | sha256sum | cut -d " " -f 1)" >> $GITHUB_ENV
           echo "SHA256_MACOS_AMD64=$(curl -sL https://artifacts-mvrpl.s3.sa-east-1.amazonaws.com/chsht/releases/${{ github.ref_name }}/chsht-macos-amd64 | sha256sum | cut -d " " -f 1)" >> $GITHUB_ENV
