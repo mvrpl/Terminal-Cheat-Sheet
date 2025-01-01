@@ -32,7 +32,7 @@ chsht --version
 
 ## Version
 
-0.3.0
+0.5.0
 
 ## License
 
