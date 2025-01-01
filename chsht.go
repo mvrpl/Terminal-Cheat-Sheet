@@ -22,7 +22,7 @@ import (
 )
 
 const (
-	version = "0.3.0"
+	version = "0.5.0"
 )
 
 type Command struct {
