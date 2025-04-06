@@ -22,7 +22,7 @@ import (
 )
 
 const (
-	version = "0.5.0"
+	version = "1.0.0"
 )
 
 type Command struct {
@@ -230,8 +230,7 @@ func main() {
 	rows, err := db.Query("SELECT * FROM " + Program)
 	check(err)
 
-	var data map[string][]map[string]string
-	data = make(map[string][]map[string]string)
+	data := make(map[string][]map[string]string)
 
 	for rows.Next() {
 		var command string
